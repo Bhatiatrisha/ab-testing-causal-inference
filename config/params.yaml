@@ -1,0 +1,17 @@
+experiment:
+  start_date: "2024-01-15"
+  end_date:   "2024-02-15"
+  expected_split: 0.5
+
+cleaning:
+  winsor_lower: 0.01
+  winsor_upper: 0.99
+
+stats:
+  alpha: 0.01
+  power: 0.95
+
+covariates:
+  - tenure_days
+  - avg_pages_per_sess
+  - avg_events_per_sess
