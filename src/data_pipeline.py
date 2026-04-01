@@ -10,9 +10,18 @@ import yaml
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 logger = logging.getLogger(__name__)
 
-
-def load_config(path: str = "/config/params.yaml") -> dict:
-    with open(path) as f:
+REPO_ROOT = Path(__file__).resolve().parent.parent
+def load_config(path: str = "config/params.yaml") -> dict:
+    config_path = Path(path)
+    if not config_path.is_absolute():
+        config_path = REPO_ROOT / config_path
+    if not config_path.exists():
+        raise FileNotFoundError(
+            f"Config not found at: {config_path}\n"
+            f"REPO_ROOT resolved to: {REPO_ROOT}\n"
+            f"Files in REPO_ROOT: {list(REPO_ROOT.iterdir())}"
+        )
+    with open(config_path) as f:
         return yaml.safe_load(f)
 
 
@@ -234,13 +243,20 @@ def check_pre_experiment_balance(user_df: pd.DataFrame,
 
 def run_pipeline(source: str,
                  config_path: str = "config/params.yaml") -> pd.DataFrame:
-    """
-    End-to-end pipeline: raw events → analysis-ready user dataframe.
-    """
     cfg = load_config(config_path)
 
-    # 1. Load
-    df = load_events(source)
+    # Resolve source relative to repo root, not cwd
+    source_path = Path(source)
+    if not source_path.is_absolute():
+        source_path = REPO_ROOT / source_path
+    if not source_path.exists():
+        raise FileNotFoundError(
+            f"Event data not found at: {source_path}\n"
+            f"Run src/simulation.py first to generate it.\n"
+            f"Files in data/raw: {list((REPO_ROOT / 'data' / 'raw').iterdir()) if (REPO_ROOT / 'data' / 'raw').exists() else 'directory missing'}"
+        )
+
+    df = load_events(source_path)
 
     # 2. Clean
     df = clean_events(df)
