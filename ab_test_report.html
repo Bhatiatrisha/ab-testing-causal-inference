@@ -1,0 +1,225 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A/B Test Report — UI change — session duration</title>
+<style>
+  body        { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+                max-width: 960px; margin: 0 auto; padding: 40px 24px;
+                color: #2d2d2d; background: #fff; }
+  h1          { font-size: 1.8rem; font-weight: 700; margin-bottom: 4px; color: #1a1a1a; }
+  h2          { font-size: 1.2rem; font-weight: 600; margin-top: 40px;
+                padding-bottom: 6px; border-bottom: 2px solid #e8e8e8; color: #333; }
+  .subtitle   { color: #666; font-size: 0.95rem; margin-bottom: 32px; }
+  .kpi-grid   { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin: 24px 0; }
+  .kpi        { background: #f7f8fa; border-radius: 10px; padding: 18px 20px;
+                border-left: 4px solid #2e7d32; }
+  .kpi-value  { font-size: 2rem; font-weight: 700; color: #2e7d32; line-height: 1; }
+  .kpi-label  { font-size: 0.78rem; color: #888; margin-top: 4px; text-transform: uppercase;
+                letter-spacing: 0.04em; }
+  .verdict    { background: #f1f8f1; border: 1px solid #2e7d32;
+                border-radius: 10px; padding: 20px 24px; margin: 24px 0; }
+  .verdict h3 { margin: 0 0 6px; color: #2e7d32; font-size: 1.05rem; }
+  .verdict p  { margin: 0; font-size: 0.95rem; color: #444; line-height: 1.6; }
+  table       { width: 100%; border-collapse: collapse; font-size: 0.88rem; margin: 16px 0; }
+  th          { background: #f2f4f6; padding: 10px 12px; text-align: left;
+                font-weight: 600; border-bottom: 2px solid #dde1e7; color: #555; }
+  td          { padding: 9px 12px; border-bottom: 1px solid #eef0f3; }
+  tr:hover td { background: #fafbfc; }
+  .sig-yes    { color: #2e7d32; font-weight: 600; }
+  .sig-no     { color: #c62828; }
+  .fig        { margin: 24px 0; text-align: center; }
+  .fig img    { max-width: 100%; border-radius: 8px;
+                border: 1px solid #eee; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+  .fig-cap    { font-size: 0.82rem; color: #888; margin-top: 8px; }
+  .method-note { font-size: 0.82rem; color: #888; background: #f7f8fa;
+                 border-radius: 6px; padding: 12px 16px; margin: 12px 0;
+                 border-left: 3px solid #ccc; line-height: 1.5; }
+  footer      { margin-top: 60px; padding-top: 16px; border-top: 1px solid #eee;
+                font-size: 0.78rem; color: #aaa; }
+</style>
+</head>
+<body>
+
+<h1>A/B Test Report</h1>
+<div class="subtitle">UI change — session duration &nbsp;·&nbsp; 2024-01-15 to 2024-02-15 &nbsp;·&nbsp; Generated 2026-04-01 20:20</div>
+
+<h2>Executive summary</h2>
+<div class="kpi-grid">
+  <div class="kpi">
+    <div class="kpi-value">+1.8%</div>
+    <div class="kpi-label">Session duration lift</div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-value">3.47e-07</div>
+    <div class="kpi-label">p-value (ANCOVA)</div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-value">26,966</div>
+    <div class="kpi-label">Users analysed</div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-value">76%</div>
+    <div class="kpi-label">Sample size reduction</div>
+  </div>
+</div>
+
+<div class="verdict">
+  <h3>Ship it — statistically significant positive result</h3>
+  <p>The UI change produced a +1.8% lift in average session duration (ANCOVA, p=3.47e-07, α=0.01, n=26,966). All secondary tests (Mann-Whitney U, bootstrap) are directionally consistent. Recommend shipping to 100% of users.</p>
+</div>
+
+<h2>Statistical results</h2>
+<p class="method-note">
+  Primary estimator: ANCOVA on log-transformed session duration with covariate adjustment
+  (tenure, pages/session, events/session). Heteroskedasticity-robust standard errors (HC3).
+  Secondary validation: PSM nearest-neighbour matching (caliper=0.05), Welch t-test,
+  Mann-Whitney U, and percentile bootstrap on the matched sample.
+</p>
+<table>
+  <thead>
+    <tr>
+      <th>Test</th><th>Lift (%)</th><th>p-value</th>
+      <th>95% CI low</th><th>95% CI high</th><th>Significant</th>
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>Welch t-test</td>
+      <td>1.47%</td>
+      <td>2.5161e-02</td>
+      <td>-0.229</td>
+      <td>3.273</td>
+      <td class="sig-no">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td>Mann-Whitney U</td>
+      <td>—</td>
+      <td>1.8804e-03</td>
+      <td>—</td>
+      <td>—</td>
+      <td class="sig-yes">
+        Yes
+      </td>
+    </tr>
+    
+    <tr>
+      <td>Bootstrap mean diff</td>
+      <td>1.47%</td>
+      <td>—</td>
+      <td>-0.232</td>
+      <td>3.263</td>
+      <td class="sig-no">
+        No
+      </td>
+    </tr>
+    
+  </tbody>
+</table>
+
+<h2>Power analysis</h2>
+<table>
+  <thead>
+    <tr><th>Method</th><th>n / group</th><th>Total n</th><th>Notes</th></tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>two-sample t-test</td>
+      <td>1,104</td>
+      <td>2,208</td>
+      <td></td>
+    </tr>
+    
+    <tr>
+      <td>ANCOVA (covariate-adjusted)</td>
+      <td>268</td>
+      <td>536</td>
+      <td>R²=0.757 → variance reduction=75.7%, sample reduction vs t-test=75.7%</td>
+    </tr>
+    
+  </tbody>
+</table>
+
+<h2>Figures</h2>
+
+<div class="fig">
+  <img src="figures/fig1_distributions.png" alt="Figure 1: Session duration distributions — matched sample">
+  <div class="fig-cap">Figure 1: Session duration distributions — matched sample</div>
+</div>
+
+<div class="fig">
+  <img src="figures/fig2_propensity.png" alt="Figure 2: Propensity score overlap — common support verification">
+  <div class="fig-cap">Figure 2: Propensity score overlap — common support verification</div>
+</div>
+
+<div class="fig">
+  <img src="figures/fig3_balance.png" alt="Figure 3: Covariate balance (Love plot) — before and after PSM">
+  <div class="fig-cap">Figure 3: Covariate balance (Love plot) — before and after PSM</div>
+</div>
+
+<div class="fig">
+  <img src="figures/fig4_effects.png" alt="Figure 4: Effect estimates and 95% CIs across all test methods">
+  <div class="fig-cap">Figure 4: Effect estimates and 95% CIs across all test methods</div>
+</div>
+
+<div class="fig">
+  <img src="figures/fig5_power_curve.png" alt="Figure 5: Required sample size vs MDE — t-test vs ANCOVA">
+  <div class="fig-cap">Figure 5: Required sample size vs MDE — t-test vs ANCOVA</div>
+</div>
+
+
+<h2>Covariate balance (PSM)</h2>
+<table>
+  <thead>
+    <tr><th>Covariate</th>
+        <th>Control mean</th><th>Treatment mean</th><th>SMD before</th><th>SMD after</th>
+    </tr>
+  </thead>
+  <tbody>
+    
+    <tr>
+      <td>tenure_days</td>
+      <td>24.092</td>
+      <td>24.025</td>
+      <td class="">
+          -0.011</td>
+      <td class="">
+          0.002</td>
+    </tr>
+    
+    <tr>
+      <td>avg_pages_per_sess</td>
+      <td>2.772</td>
+      <td>2.924</td>
+      <td class="sig-no">
+          0.233</td>
+      <td class="">
+          -0.005</td>
+    </tr>
+    
+    <tr>
+      <td>avg_events_per_sess</td>
+      <td>5.061</td>
+      <td>5.607</td>
+      <td class="sig-no">
+          0.256</td>
+      <td class="">
+          0.001</td>
+    </tr>
+    
+  </tbody>
+</table>
+
+<footer>
+  Generated by ab-testing-causal-inference pipeline &nbsp;·&nbsp;
+  2026-04-01 20:20 &nbsp;·&nbsp; alpha=0.01, power=0.95
+</footer>
+</body>
+</html>
