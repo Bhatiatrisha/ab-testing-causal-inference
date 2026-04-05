@@ -1,3 +1,4 @@
+# requirements.txt
 pandas>=2.0
 numpy>=1.26
 scipy>=1.11
@@ -8,4 +9,8 @@ seaborn>=0.12
 jinja2>=3.1
 pyyaml>=6.0
 pyarrow>=14.0
+
+# test & dev
 pytest>=7.4
+pytest-cov>=4.1
+flake8>=6.0
