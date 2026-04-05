@@ -248,13 +248,13 @@ class TestCUPED:
     assert result["var_reduction"] > 0
 
     def test_cuped_significant_when_raw_is_significant(self, user_df_with_effect):
-    """If the raw test is significant, CUPED should also be significant."""
-    result = cuped(user_df_with_effect,
-                   outcome_col="avg_session_dur",
-                   pre_period_col="pre_avg_session_dur",
-                   alpha=0.05)
-    if result["raw"]["significant"]:
-        assert result["cuped"]["significant"]
+        """If the raw test is significant, CUPED should also be significant."""
+        result = cuped(user_df_with_effect,
+                       outcome_col="avg_session_dur",
+                       pre_period_col="pre_avg_session_dur",
+                       alpha=0.05)
+        if result["raw"]["significant"]:
+            assert result["cuped"]["significant"]
     
     def test_theta_is_float(self, user_df_with_effect):
         result = cuped(user_df_with_effect,
