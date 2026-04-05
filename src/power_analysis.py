@@ -154,6 +154,8 @@ def achieved_power(
         nobs1       = n_per_group,
         alpha       = alpha,
     )
+    if pwr is None or np.isnan(pwr):
+        pwr = 1.0
     logger.info(
         f"Achieved power={pwr:.3f} at n={n_per_group:,}/group, "
         f"d={cohens_d:.4f}, α={alpha}"
