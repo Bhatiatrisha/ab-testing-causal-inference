@@ -245,7 +245,7 @@ class TestCUPED:
         result = cuped(user_df_with_effect,
                    outcome_col="avg_session_dur",
                    pre_period_col="pre_avg_session_dur")
-    assert result["var_reduction"] > 0
+        assert result["var_reduction"] > 0
 
     def test_cuped_significant_when_raw_is_significant(self, user_df_with_effect):
         """If the raw test is significant, CUPED should also be significant."""
