@@ -266,8 +266,8 @@ def runtime_estimate(
         "required_n_per_group": required_n,
         "daily_traffic":        daily_traffic,
         "treatment_split":      treatment_split,
-        "days_required":        round(days_required, 1),
-        "weeks_required":       round(weeks, 1),
+        "days_required":  round(days_required, 1),
+        "weeks_required": round(days_required / 7, 2),
     }
 
 
