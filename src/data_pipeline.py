@@ -194,7 +194,7 @@ def check_sample_ratio_mismatch(user_df: pd.DataFrame, expected_split: float = 0
     observed = [counts.get("control", 0), counts.get("treatment", 0)]
 
     chi2, p_val, *_ = chi2_contingency([observed, expected])
-    srm_detected = p_val < alpha
+    srm_detected = bool(p_val < alpha)
 
     logger.info(
         f"SRM check — control: {observed[0]:,}, treatment: {observed[1]:,}, "
