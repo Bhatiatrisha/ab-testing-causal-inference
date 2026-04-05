@@ -55,7 +55,7 @@ def welch_ttest(
         "ci_high":      ci[1],
         "n_control":    n_c,
         "n_treatment":  n_t,
-        "significant":  p < alpha,
+        "significant": bool(p < alpha),
         "alpha":        alpha,
     }
     _log_result(result)
@@ -84,7 +84,7 @@ def mann_whitney(
         "rank_biserial_r": r,
         "n_control":   n_c,
         "n_treatment": n_t,
-        "significant": p < alpha,
+        "significant": bool(p < alpha),
         "alpha":       alpha,
     }
     logger.info(
@@ -120,7 +120,7 @@ def bootstrap_mean_diff(
 
     ci_low, ci_high = np.percentile(diffs, [100 * alpha / 2, 100 * (1 - alpha / 2)])
     point_est = treatment.mean() - control.mean()
-    significant = ci_low > 0 or ci_high < 0  # CI excludes zero
+    significant = bool(ci_low > 0 or ci_high < 0)  # CI excludes zero
 
     result = {
         "test":           "Bootstrap mean diff",
