@@ -254,7 +254,7 @@ class TestCUPED:
         assert isinstance(result["theta"], float)
 
     def test_missing_pre_col_raises(self, user_df_with_effect):
-        with pytest.raises(ValueError, match="pre_period_col"):
+        with pytest.raises(ValueError, match="pre-period column"):
             cuped(user_df_with_effect,
                   outcome_col="avg_session_dur",
                   pre_period_col="nonexistent_col")
