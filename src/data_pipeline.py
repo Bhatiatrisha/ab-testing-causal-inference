@@ -181,22 +181,32 @@ def build_user_features(sessions: pd.DataFrame) -> pd.DataFrame:
 
 # ─── 5. VALIDATION CHECKS ─────────────────────────────────────────────────────
 
-def check_sample_ratio_mismatch(user_df, expected_split=0.5, alpha=0.01):
+def check_sample_ratio_mismatch(user_df: pd.DataFrame, expected_split: float = 0.5,
+                                 alpha: float = 0.01) -> bool:
+    from scipy.stats import chisquare
+
     counts  = user_df["variant"].value_counts()
     n_total = counts.sum()
     n_ctrl  = counts.get("control",   0)
     n_trt   = counts.get("treatment", 0)
+
+    # Degenerate case: one group is completely missing → guaranteed SRM
+    if n_ctrl == 0 or n_trt == 0:
+        logger.warning(
+            f"SRM check — control: {n_ctrl:,}, treatment: {n_trt:,} "
+            f"→ SRM DETECTED (one group is empty)"
+        )
+        return True
+
     observed = [n_ctrl, n_trt]
     expected = [n_total * expected_split, n_total * (1 - expected_split)]
 
-    # Use one-sample chi2 directly — not chi2_contingency
-    from scipy.stats import chisquare
-    chi2, p_val = chisquare(observed, f_exp=expected)
+    chi2_stat, p_val = chisquare(observed, f_exp=expected)
     srm_detected = bool(p_val < alpha)
 
     logger.info(
         f"SRM check — control: {n_ctrl:,}, treatment: {n_trt:,}, "
-        f"chi2={chi2:.3f}, p={p_val:.4f} → "
+        f"chi2={chi2_stat:.3f}, p={p_val:.4f} → "
         f"{'SRM DETECTED' if srm_detected else 'OK'}"
     )
     return srm_detected
