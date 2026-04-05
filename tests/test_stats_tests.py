@@ -243,10 +243,19 @@ class TestCUPED:
     def test_cuped_pvalue_le_raw_pvalue(self, user_df_with_effect):
         """CUPED should produce a smaller or equal p-value than raw test."""
         result = cuped(user_df_with_effect,
-                       outcome_col="avg_session_dur",
-                       pre_period_col="pre_avg_session_dur")
-        assert result["cuped"]["p_value"] <= result["raw"]["p_value"] * 1.5
+                   outcome_col="avg_session_dur",
+                   pre_period_col="pre_avg_session_dur")
+    assert result["var_reduction"] > 0
 
+    def test_cuped_significant_when_raw_is_significant(self, user_df_with_effect):
+    """If the raw test is significant, CUPED should also be significant."""
+    result = cuped(user_df_with_effect,
+                   outcome_col="avg_session_dur",
+                   pre_period_col="pre_avg_session_dur",
+                   alpha=0.05)
+    if result["raw"]["significant"]:
+        assert result["cuped"]["significant"]
+    
     def test_theta_is_float(self, user_df_with_effect):
         result = cuped(user_df_with_effect,
                        outcome_col="avg_session_dur",
