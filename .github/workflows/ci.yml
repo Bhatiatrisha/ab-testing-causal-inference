@@ -9,33 +9,38 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: ["3.11"]
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Python ${{ matrix.python-version }}
+      - name: Set up Python 3.11
         uses: actions/setup-python@v5
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: "3.11"
           cache: pip
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          pip install pytest pytest-cov flake8
 
-      - name: Lint with flake8
+      - name: Lint — errors only (fails build)
         run: |
-          # Stop on syntax errors or undefined names
-          flake8 src/ tests/ --count --select=E9,F63,F7,F82 --show-source --statistics
-          # Warn on style issues (don't fail the build)
-          flake8 src/ tests/ --count --max-line-length=100 --statistics --exit-zero
+          flake8 src/ tests/ \
+            --count \
+            --select=E9,F63,F7,F82 \
+            --show-source \
+            --statistics
 
-      - name: Run tests with coverage
+      - name: Lint — style warnings (never fails build)
+        run: |
+          flake8 src/ tests/ \
+            --count \
+            --max-line-length=100 \
+            --statistics \
+            --exit-zero
+
+      - name: Run tests
         run: |
           pytest tests/ \
             --cov=src \
@@ -43,7 +48,7 @@ jobs:
             --cov-report=xml \
             -v
 
-      - name: Upload coverage report
+      - name: Upload coverage
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report
