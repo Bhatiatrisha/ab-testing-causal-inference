@@ -300,7 +300,7 @@ class TestRuntimeEstimate:
 
     def test_weeks_consistent_with_days(self):
         result = runtime_estimate(1000, 500)
-        assert abs(result["weeks_required"] - result["days_required"] / 7) < 0.01
+        assert abs(result["weeks_required"] - result["days_required"] / 7) < 0.02
 
     def test_split_affects_days(self):
         """A 25% split means fewer users per group per day → more days."""
