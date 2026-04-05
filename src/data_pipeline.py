@@ -233,9 +233,12 @@ def check_pre_experiment_balance(user_df: pd.DataFrame,
         rows.append({"covariate": col, "mean_control": mean_c,
                      "mean_treatment": mean_t, "SMD": smd})
     balance_df = pd.DataFrame(rows)
-    imbalanced = balance_df[balance_df["SMD"].abs() > 0.1]
-    if len(imbalanced):
-        logger.warning(f"Imbalanced covariates (SMD > 0.1):\n{imbalanced}")
+                                      
+    # Guard: only check SMD if we have rows
+    if not balance_df.empty:
+        imbalanced = balance_df[balance_df["SMD"].abs() > 0.1]
+        if len(imbalanced):
+            logger.warning(f"Imbalanced covariates (SMD > 0.1):\n{imbalanced}")
     return balance_df
 
 
