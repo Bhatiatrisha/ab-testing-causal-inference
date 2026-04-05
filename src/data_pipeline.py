@@ -181,24 +181,23 @@ def build_user_features(sessions: pd.DataFrame) -> pd.DataFrame:
 
 # ─── 5. VALIDATION CHECKS ─────────────────────────────────────────────────────
 
-def check_sample_ratio_mismatch(user_df: pd.DataFrame, expected_split: float = 0.5,
-                                 alpha: float = 0.01) -> bool:
-    """
-    Sample Ratio Mismatch (SRM) check using chi-square test.
-    If traffic allocation is uneven (p < alpha), the experiment is compromised.
-    Returns True if SRM is detected (you should STOP and investigate).
-    """
-    counts = user_df["variant"].value_counts()
+def check_sample_ratio_mismatch(user_df, expected_split=0.5, alpha=0.01):
+    counts  = user_df["variant"].value_counts()
     n_total = counts.sum()
+    n_ctrl  = counts.get("control",   0)
+    n_trt   = counts.get("treatment", 0)
+    observed = [n_ctrl, n_trt]
     expected = [n_total * expected_split, n_total * (1 - expected_split)]
-    observed = [counts.get("control", 0), counts.get("treatment", 0)]
 
-    chi2, p_val, *_ = chi2_contingency([observed, expected])
+    # Use one-sample chi2 directly — not chi2_contingency
+    from scipy.stats import chisquare
+    chi2, p_val = chisquare(observed, f_exp=expected)
     srm_detected = bool(p_val < alpha)
 
     logger.info(
-        f"SRM check — control: {observed[0]:,}, treatment: {observed[1]:,}, "
-        f"chi2={chi2:.3f}, p={p_val:.4f} → {'SRM DETECTED' if srm_detected else 'OK'}"
+        f"SRM check — control: {n_ctrl:,}, treatment: {n_trt:,}, "
+        f"chi2={chi2:.3f}, p={p_val:.4f} → "
+        f"{'SRM DETECTED' if srm_detected else 'OK'}"
     )
     return srm_detected
 
