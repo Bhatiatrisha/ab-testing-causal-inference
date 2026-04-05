@@ -210,7 +210,7 @@ class TestDiD:
         assert 0.0 < result["pct_lift"] < 0.5
 
     def test_missing_pre_col_raises(self, balanced_user_df):
-        with pytest.raises(ValueError, match="pre_col"):
+        with pytest.raises(ValueError, match="pre-period column"):
             difference_in_differences(balanced_user_df, pre_col="nonexistent")
 
     def test_expected_keys_present(self, did_user_df):
@@ -261,7 +261,7 @@ class TestDiDRegression:
         assert model.nobs == len(did_user_df) * 2
 
     def test_missing_pre_col_raises(self, balanced_user_df):
-        with pytest.raises(ValueError):
+        with pytest.raises(ValueError, match="pre-period column"):
             did_regression(balanced_user_df, pre_col="missing_col")
 
     def test_with_covariates(self, did_user_df):
